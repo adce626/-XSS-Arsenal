@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XSS Arsenal - Professional Payload Repository</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Alert Protection Modal -->
+    <div id="alertProtectionModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2><i class="fas fa-shield-alt"></i> Alert Protection Active</h2>
+            <p>This site has alert protection enabled to prevent unwanted popup interruptions while browsing XSS payloads.</p>
+            <label class="toggle-container">
+                <input type="checkbox" id="alertProtectionToggle" checked>
+                <span class="toggle-slider"></span>
+                Enable Alert Protection
+            </label>
+        </div>
+    </div>
+
+    <!-- Copy Success Toast -->
+    <div id="copyToast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        Payload copied to clipboard!
+    </div>
+
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-bug"></i>
+                    <h1>XSS Arsenal</h1>
+                    <span class="subtitle">Professional Payload Repository</span>
+                </div>
+                <div class="header-controls">
+                    <button id="alertProtectionBtn" class="control-btn">
+                        <i class="fas fa-shield-alt"></i>
+                        Alert Protection
+                    </button>
+                    <button id="themeToggle" class="control-btn">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- Search and Filter Section -->
+            <div class="search-section">
+                <div class="search-container">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search payloads by event, tag, or description...">
+                        <button id="clearSearch" class="clear-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="filter-controls">
+                        <select id="eventFilter">
+                            <option value="">All Events</option>
+                        </select>
+                        <select id="tagFilter">
+                            <option value="">All Tags</option>
+                        </select>
+                        <select id="browserFilter">
+                            <option value="">All Browsers</option>
+                            <option value="chrome">Chrome Compatible</option>
+                            <option value="firefox">Firefox Compatible</option>
+                            <option value="safari">Safari Compatible</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Section -->
+            <div class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalPayloads">0</div>
+                    <div class="stat-label">Total Payloads</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="filteredPayloads">0</div>
+                    <div class="stat-label">Filtered Results</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="uniqueEvents">0</div>
+                    <div class="stat-label">Unique Events</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="compatibleBrowsers">3</div>
+                    <div class="stat-label">Supported Browsers</div>
+                </div>
+            </div>
+
+            <!-- Category Navigation -->
+            <div class="category-nav">
+                <button class="category-btn active" data-category="all">
+                    <i class="fas fa-list"></i>
+                    All Payloads
+                </button>
+                <button class="category-btn" data-category="no-interaction">
+                    <i class="fas fa-magic"></i>
+                    No User Interaction
+                </button>
+                <button class="category-btn" data-category="auto-events">
+                    <i class="fas fa-play-circle"></i>
+                    Auto Events
+                </button>
+                <button class="category-btn" data-category="media-events">
+                    <i class="fas fa-video"></i>
+                    Media Events
+                </button>
+                <button class="category-btn" data-category="animation-events">
+                    <i class="fas fa-spinner"></i>
+                    Animation Events
+                </button>
+            </div>
+
+            <!-- Payloads Container -->
+            <div class="payloads-container" id="payloadsContainer">
+                <!-- Payloads will be dynamically inserted here -->
+            </div>
+
+            <!-- Load More Button -->
+            <div class="load-more-section">
+                <button id="loadMoreBtn" class="load-more-btn">
+                    <i class="fas fa-plus-circle"></i>
+                    Load More Payloads
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-info-circle"></i> About XSS Arsenal</h3>
+                    <p>A comprehensive collection of Cross-Site Scripting (XSS) payloads for security professionals, penetration testers, and bug bounty hunters.</p>
+                </div>
+                <div class="footer-section">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Disclaimer</h3>
+                    <p>These payloads are for educational and authorized testing purposes only. Use responsibly and only on systems you own or have explicit permission to test.</p>
+                </div>
+                <div class="footer-section">
+                    <h3><i class="fas fa-heart"></i> Credits</h3>
+                    <p>Data sourced from PortSwigger's XSS Cheat Sheet. Updated regularly to include the latest attack vectors.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 XSS Arsenal. For authorized security testing only.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="payloads.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
