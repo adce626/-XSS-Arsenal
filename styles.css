@@ -28,6 +28,7 @@ body {
     color: var(--text-primary);
     line-height: 1.6;
     overflow-x: hidden;
+    position: relative;
 }
 
 .container {
@@ -44,6 +45,8 @@ body {
     position: sticky;
     top: 0;
     z-index: 1000;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .header-content {
@@ -80,21 +83,24 @@ body {
 
 .header-controls {
     display: flex;
-    gap: 15px;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .control-btn {
     background: var(--bg-tertiary);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
-    padding: 10px 20px;
+    padding: 8px 15px;
     border-radius: 8px;
     cursor: pointer;
     transition: var(--transition);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    white-space: nowrap;
 }
 
 .control-btn:hover {
@@ -196,8 +202,8 @@ body {
 /* Stats Section */
 .stats-section {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
     margin-bottom: 40px;
 }
 
@@ -540,6 +546,8 @@ input[type="checkbox"] {
     background: var(--bg-secondary);
     border-top: 2px solid var(--primary-green);
     margin-top: 60px;
+    position: relative;
+    z-index: 1;
 }
 
 .footer-content {
@@ -569,6 +577,103 @@ input[type="checkbox"] {
     color: var(--text-muted);
 }
 
+.developer-credit {
+    margin-top: 10px;
+    padding: 10px;
+    background: linear-gradient(135deg, var(--bg-tertiary), var(--dark-green));
+    border-radius: 8px;
+    display: inline-block;
+    color: var(--text-primary);
+    border: 1px solid var(--primary-green);
+    box-shadow: var(--shadow-green);
+}
+
+.username {
+    color: var(--primary-green);
+    font-weight: bold;
+    text-shadow: var(--shadow-green);
+    padding: 0 8px;
+    background: var(--bg-primary);
+    border-radius: 4px;
+    border: 1px solid var(--primary-green);
+}
+
+.developer-credit i {
+    color: var(--primary-green);
+    margin: 0 5px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Animated Background */
+.animated-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.matrix-rain {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(90deg, transparent 98%, var(--primary-green) 100%),
+        linear-gradient(180deg, transparent 98%, var(--primary-green) 100%);
+    background-size: 50px 50px, 50px 50px;
+    animation: matrixMove 20s linear infinite;
+    opacity: 0.1;
+}
+
+@keyframes matrixMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+/* Logo Enhancements */
+.animated-icon {
+    animation: iconGlow 3s ease-in-out infinite;
+}
+
+@keyframes iconGlow {
+    0%, 100% { 
+        text-shadow: var(--shadow-green);
+        transform: scale(1);
+    }
+    50% { 
+        text-shadow: 0 0 30px var(--primary-green), 0 0 40px var(--primary-green);
+        transform: scale(1.1);
+    }
+}
+
+.version-badge {
+    background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+    color: var(--bg-primary);
+    font-size: 0.7rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+    margin-top: 5px;
+    font-weight: bold;
+    display: inline-block;
+    box-shadow: var(--shadow-green);
+    animation: badgePulse 2s infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
 /* Animations */
 @keyframes fadeIn {
     from { opacity: 0; }
@@ -588,6 +693,92 @@ input[type="checkbox"] {
 
 .payload-card {
     animation: slideInUp 0.5s ease forwards;
+    position: relative;
+    overflow: hidden;
+}
+
+.payload-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.payload-card:hover::before {
+    left: 100%;
+}
+
+/* Advanced Features */
+.random-payload-highlight {
+    animation: highlightPulse 2s ease-in-out;
+    transform: scale(1.02);
+    border: 2px solid var(--primary-green) !important;
+    box-shadow: var(--shadow-green-intense) !important;
+}
+
+@keyframes highlightPulse {
+    0%, 100% { 
+        box-shadow: var(--shadow-green-intense);
+        border-color: var(--primary-green);
+    }
+    50% { 
+        box-shadow: 0 0 40px rgba(0, 255, 65, 0.8);
+        border-color: var(--secondary-green);
+    }
+}
+
+.export-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    animation: fadeIn 0.3s ease;
+}
+
+.export-content {
+    background: var(--bg-secondary);
+    margin: 5% auto;
+    padding: 30px;
+    border: 2px solid var(--primary-green);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: var(--shadow-green-intense);
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.export-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.export-option {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+}
+
+.export-option:hover {
+    background: var(--primary-green);
+    color: var(--bg-primary);
+    border-color: var(--primary-green);
+    box-shadow: var(--shadow-green);
 }
 
 /* Responsive Design */
@@ -637,6 +828,23 @@ input[type="checkbox"] {
     .stats-section {
         grid-template-columns: repeat(2, 1fr);
     }
+    
+    .header-controls {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .control-btn {
+        width: 100%;
+        max-width: 200px;
+        justify-content: center;
+    }
+    
+    .developer-credit {
+        text-align: center;
+        margin: 10px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -648,9 +856,22 @@ input[type="checkbox"] {
         padding: 20px;
     }
     
-    .modal-content {
-        margin: 20% auto;
+    .modal-content, .export-content {
+        margin: 10% auto;
         padding: 20px;
+        width: 95%;
+    }
+    
+    .export-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .logo h1 {
+        font-size: 1.8rem;
+    }
+    
+    .logo i {
+        font-size: 2rem;
     }
 }
 

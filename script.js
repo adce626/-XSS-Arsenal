@@ -38,7 +38,9 @@ class XSSArsenal {
             alertProtectionBtn: document.getElementById('alertProtectionBtn'),
             alertProtectionToggle: document.getElementById('alertProtectionToggle'),
             closeModal: document.querySelector('.close'),
-            themeToggle: document.getElementById('themeToggle')
+            themeToggle: document.getElementById('themeToggle'),
+            exportBtn: document.getElementById('exportBtn'),
+            randomPayloadBtn: document.getElementById('randomPayloadBtn')
         };
     }
 
@@ -67,6 +69,12 @@ class XSSArsenal {
 
         // Theme toggle
         this.elements.themeToggle.addEventListener('click', this.toggleTheme.bind(this));
+
+        // Export functionality
+        this.elements.exportBtn.addEventListener('click', this.showExportModal.bind(this));
+
+        // Random payload
+        this.elements.randomPayloadBtn.addEventListener('click', this.showRandomPayload.bind(this));
 
         // Modal close on outside click
         this.elements.alertProtectionModal.addEventListener('click', (e) => {
@@ -225,6 +233,13 @@ class XSSArsenal {
         
         const uniqueEvents = new Set(this.payloads.map(p => p.event)).size;
         this.elements.uniqueEvents.textContent = uniqueEvents;
+        
+        // Update categories count
+        const categoriesElement = document.getElementById('categoriesCount');
+        if (categoriesElement) {
+            const uniqueCategories = new Set(this.payloads.map(p => p.category)).size;
+            categoriesElement.textContent = uniqueCategories;
+        }
     }
 
     renderPayloads() {
@@ -385,6 +400,193 @@ class XSSArsenal {
         
         // Save preference
         localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    }
+
+    showExportModal() {
+        const modal = this.createExportModal();
+        document.body.appendChild(modal);
+        modal.style.display = 'block';
+    }
+
+    createExportModal() {
+        const modal = document.createElement('div');
+        modal.className = 'export-modal';
+        modal.innerHTML = `
+            <div class="export-content">
+                <span class="close" onclick="this.parentElement.parentElement.remove()">&times;</span>
+                <h2><i class="fas fa-download"></i> Export XSS Payloads</h2>
+                <p>Choose your preferred export format:</p>
+                <div class="export-options">
+                    <div class="export-option" onclick="app.exportPayloads('json')">
+                        <i class="fas fa-file-code"></i>
+                        <div>JSON Format</div>
+                    </div>
+                    <div class="export-option" onclick="app.exportPayloads('txt')">
+                        <i class="fas fa-file-alt"></i>
+                        <div>Text Format</div>
+                    </div>
+                    <div class="export-option" onclick="app.exportPayloads('csv')">
+                        <i class="fas fa-file-csv"></i>
+                        <div>CSV Format</div>
+                    </div>
+                    <div class="export-option" onclick="app.exportPayloads('html')">
+                        <i class="fas fa-file-code"></i>
+                        <div>HTML Report</div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button onclick="this.parentElement.parentElement.parentElement.remove()" class="control-btn">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // Close on outside click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+        
+        return modal;
+    }
+
+    exportPayloads(format) {
+        const currentPayloads = this.filteredPayloads;
+        let content = '';
+        let filename = '';
+        let mimeType = '';
+        
+        switch(format) {
+            case 'json':
+                content = JSON.stringify(currentPayloads, null, 2);
+                filename = 'xss-payloads.json';
+                mimeType = 'application/json';
+                break;
+                
+            case 'txt':
+                content = currentPayloads.map(p => 
+                    `Event: ${p.event}\nDescription: ${p.description}\nTag: ${p.tag}\nCode: ${p.code}\nCompatibility: Chrome: ${p.compatibility.chrome}, Firefox: ${p.compatibility.firefox}, Safari: ${p.compatibility.safari}\n\n`
+                ).join('');
+                filename = 'xss-payloads.txt';
+                mimeType = 'text/plain';
+                break;
+                
+            case 'csv':
+                const header = 'Event,Description,Tag,Code,Chrome,Firefox,Safari,Category\n';
+                const rows = currentPayloads.map(p => 
+                    `"${p.event}","${p.description}","${p.tag}","${p.code.replace(/"/g, '""')}",${p.compatibility.chrome},${p.compatibility.firefox},${p.compatibility.safari},"${p.category}"`
+                ).join('\n');
+                content = header + rows;
+                filename = 'xss-payloads.csv';
+                mimeType = 'text/csv';
+                break;
+                
+            case 'html':
+                content = this.generateHTMLReport(currentPayloads);
+                filename = 'xss-payloads-report.html';
+                mimeType = 'text/html';
+                break;
+        }
+        
+        this.downloadFile(content, filename, mimeType);
+        document.querySelector('.export-modal').remove();
+        this.showToast(`Exported ${currentPayloads.length} payloads as ${format.toUpperCase()}`, 'success');
+    }
+
+    generateHTMLReport(payloads) {
+        return `<!DOCTYPE html>
+<html>
+<head>
+    <title>XSS Arsenal - Payload Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #0a0a0a; color: #e0e0e0; }
+        .header { text-align: center; color: #00ff41; border-bottom: 2px solid #00ff41; padding-bottom: 20px; margin-bottom: 30px; }
+        .payload { background: #1a1a1a; border: 1px solid #333; margin: 20px 0; padding: 20px; border-radius: 8px; }
+        .payload-header { color: #00ff41; font-size: 1.2em; margin-bottom: 10px; }
+        .payload-code { background: #000; border: 1px solid #333; padding: 10px; font-family: monospace; word-break: break-all; color: #00ff41; }
+        .compatibility { margin: 10px 0; }
+        .compatible { color: #00ff41; }
+        .incompatible { color: #ff4444; }
+        .footer { text-align: center; margin-top: 50px; padding-top: 20px; border-top: 1px solid #333; color: #808080; }
+        .developer { color: #00ff41; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🛡️ XSS Arsenal - Security Payload Report</h1>
+        <p>Generated on: ${new Date().toLocaleString()}</p>
+        <p>Total Payloads: ${payloads.length}</p>
+    </div>
+    ${payloads.map(p => `
+        <div class="payload">
+            <div class="payload-header">${p.event} - ${p.tag}</div>
+            <p><strong>Description:</strong> ${p.description}</p>
+            <div class="payload-code">${this.escapeHtml(p.code)}</div>
+            <div class="compatibility">
+                <strong>Browser Compatibility:</strong>
+                <span class="${p.compatibility.chrome ? 'compatible' : 'incompatible'}">Chrome: ${p.compatibility.chrome ? '✓' : '✗'}</span> |
+                <span class="${p.compatibility.firefox ? 'compatible' : 'incompatible'}">Firefox: ${p.compatibility.firefox ? '✓' : '✗'}</span> |
+                <span class="${p.compatibility.safari ? 'compatible' : 'incompatible'}">Safari: ${p.compatibility.safari ? '✓' : '✗'}</span>
+            </div>
+            <p><strong>Category:</strong> ${p.category}</p>
+        </div>
+    `).join('')}
+    <div class="footer">
+        <p>&copy; 2025 XSS Arsenal - For authorized security testing only</p>
+        <p>Developed by: <span class="developer">adce626</span></p>
+    </div>
+</body>
+</html>`;
+    }
+
+    downloadFile(content, filename, mimeType) {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    showRandomPayload() {
+        if (this.filteredPayloads.length === 0) {
+            this.showToast('No payloads available for random selection', 'warning');
+            return;
+        }
+        
+        // Remove previous highlights
+        document.querySelectorAll('.random-payload-highlight').forEach(el => {
+            el.classList.remove('random-payload-highlight');
+        });
+        
+        // Select random payload
+        const randomIndex = Math.floor(Math.random() * this.filteredPayloads.length);
+        const randomPayload = this.filteredPayloads[randomIndex];
+        
+        // Scroll to and highlight the payload
+        setTimeout(() => {
+            const payloadCards = document.querySelectorAll('.payload-card');
+            const targetCard = Array.from(payloadCards).find(card => 
+                card.querySelector('.payload-event').textContent === randomPayload.event
+            );
+            
+            if (targetCard) {
+                targetCard.classList.add('random-payload-highlight');
+                targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Remove highlight after animation
+                setTimeout(() => {
+                    targetCard.classList.remove('random-payload-highlight');
+                }, 3000);
+            }
+        }, 100);
+        
+        this.showToast(`Random payload: ${randomPayload.event}`, 'success');
     }
 
     handleKeyboardNavigation(e) {

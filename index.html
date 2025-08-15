@@ -28,13 +28,19 @@
         Payload copied to clipboard!
     </div>
 
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="matrix-rain"></div>
+    </div>
+
     <header class="header">
         <div class="container">
             <div class="header-content">
                 <div class="logo">
-                    <i class="fas fa-bug"></i>
+                    <i class="fas fa-bug animated-icon"></i>
                     <h1>XSS Arsenal</h1>
                     <span class="subtitle">Professional Payload Repository</span>
+                    <div class="version-badge">v2.0 Enhanced</div>
                 </div>
                 <div class="header-controls">
                     <button id="alertProtectionBtn" class="control-btn">
@@ -43,6 +49,14 @@
                     </button>
                     <button id="themeToggle" class="control-btn">
                         <i class="fas fa-moon"></i>
+                    </button>
+                    <button id="exportBtn" class="control-btn">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                    <button id="randomPayloadBtn" class="control-btn">
+                        <i class="fas fa-random"></i>
+                        Random
                     </button>
                 </div>
             </div>
@@ -96,6 +110,14 @@
                     <div class="stat-number" id="compatibleBrowsers">3</div>
                     <div class="stat-label">Supported Browsers</div>
                 </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="categoriesCount">5</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="lastUpdated">2025</div>
+                    <div class="stat-label">Last Updated</div>
+                </div>
             </div>
 
             <!-- Category Navigation -->
@@ -119,6 +141,10 @@
                 <button class="category-btn" data-category="animation-events">
                     <i class="fas fa-spinner"></i>
                     Animation Events
+                </button>
+                <button class="category-btn" data-category="user-interaction">
+                    <i class="fas fa-hand-pointer"></i>
+                    User Interaction
                 </button>
             </div>
 
@@ -155,6 +181,11 @@
             </div>
             <div class="footer-bottom">
                 <p>&copy; 2025 XSS Arsenal. For authorized security testing only.</p>
+                <p class="developer-credit">
+                    <i class="fas fa-code"></i>
+                    Developed by: <span class="username">adce626</span>
+                    <i class="fas fa-shield-alt"></i>
+                </p>
             </div>
         </div>
     </footer>

