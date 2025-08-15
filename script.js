@@ -292,7 +292,7 @@ class XSSArsenal {
             <p class="payload-description">${this.escapeHtml(payload.description)}</p>
             
             <div class="payload-code-container">
-                <button class="copy-btn" onclick="app.copyToClipboard(\`${this.escapeForJs(payload.code)}\`)">
+                <button class="copy-btn" onclick="app.copyToClipboard(\`${this.escapeForJs(payload.code)}\`, this)">
                     <i class="fas fa-copy"></i>
                     Copy
                 </button>
@@ -334,7 +334,7 @@ class XSSArsenal {
                 ${variations.map((variation, index) => `
                     <div class="variation-item">
                         <div class="payload-code-container">
-                            <button class="copy-btn" onclick="app.copyToClipboard(\`${this.escapeForJs(variation)}\`)">
+                            <button class="copy-btn" onclick="app.copyToClipboard(\`${this.escapeForJs(variation)}\`, this)">
                                 <i class="fas fa-copy"></i>
                                 Copy
                             </button>
@@ -351,29 +351,52 @@ class XSSArsenal {
         this.renderPayloads();
     }
 
-    async copyToClipboard(text) {
+    async copyToClipboard(text, button) {
         try {
-            await navigator.clipboard.writeText(text);
-            this.showToast('Payload copied to clipboard!', 'success');
-        } catch (err) {
-            // Fallback for older browsers
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-999999px';
-            textArea.style.top = '-999999px';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
+            // Add visual feedback to button
+            const originalText = button.innerHTML;
+            button.classList.add('copied');
+            button.innerHTML = '<i class="fas fa-check"></i> Copied!';
             
-            try {
-                document.execCommand('copy');
-                this.showToast('Payload copied to clipboard!', 'success');
-            } catch (err) {
-                this.showToast('Failed to copy payload', 'error');
+            // Copy to clipboard
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(text);
+            } else {
+                // Fallback for older browsers or non-secure contexts
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                textArea.style.opacity = '0';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                if (!document.execCommand('copy')) {
+                    throw new Error('Copy command failed');
+                }
+                
+                document.body.removeChild(textArea);
             }
             
-            document.body.removeChild(textArea);
+            this.showToast('✅ Payload copied to clipboard!', 'success');
+            
+            // Reset button after 2 seconds
+            setTimeout(() => {
+                button.classList.remove('copied');
+                button.innerHTML = originalText;
+            }, 2000);
+            
+        } catch (err) {
+            console.error('Copy failed:', err);
+            button.classList.add('error');
+            this.showToast('❌ Failed to copy payload. Please select and copy manually.', 'error');
+            
+            // Reset button after error
+            setTimeout(() => {
+                button.classList.remove('error');
+            }, 2000);
         }
     }
 
